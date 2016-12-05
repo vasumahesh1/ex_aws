@@ -1,6 +1,9 @@
 defmodule ExAws.Monitoring do
   @moduledoc """
   Operations on AWS Monitoring CloudWatch
+
+  Reference:
+  http://docs.aws.amazon.com/AmazonCloudWatch/latest/APIReference/API_Operations.html
   """
 
   def put_metric_data(namespace, metric_data) do
@@ -31,6 +34,9 @@ defmodule ExAws.Monitoring do
     |> Map.put(prefix <> "Unit", metric.unit)
     |> Map.put(prefix <> "Value", metric.value)
     |> format_metric_dimensions(metric.dimensions, prefix_count, 1)
+
+    prefix_count = prefix_count + 1
+    format_metric_member_data(tail, acc, prefix_count)
   end
 
   defp format_metric_member_data([], acc, prefix_count) do
@@ -45,7 +51,6 @@ defmodule ExAws.Monitoring do
     |> Map.put(prefix <> "Value", dimension.value)
 
     prefix_count = prefix_count + 1
-
     format_metric_dimensions(acc, tail, member_count, prefix_count)
   end
 
